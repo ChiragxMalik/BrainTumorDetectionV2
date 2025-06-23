@@ -1,0 +1,114 @@
+{% extends "import.html" %} 
+{% block content %}
+<div class="main-flex-container">
+  <div class="card upload-card" tabindex="0" aria-label="Upload and prediction card">
+    <form id="upload-form" method="post" enctype="multipart/form-data" autocomplete="off">
+      <label for="imageUpload" class="file-label" id="dropArea" tabindex="0" aria-label="File upload area">
+        <span class="material-icons upload-icon">cloud_upload</span>
+        <input type="file" name="file" id="imageUpload" accept=".png, .jpg, .jpeg" aria-label="Choose image file" />
+        <span class="file-label-text" id="fileLabelText">Drag & drop or click to select an image...</span>
+      </label>
+      <div class="image-preview-section" id="imagePreviewSection" style="display:none;">
+        <img id="imagePreview" class="image-preview" src="#" alt="Image Preview" />
+      </div>
+      <button type="button" class="btn btn-primary ripple" id="btn-predict" disabled aria-disabled="true">Predict</button>
+      <div class="loader" id="loader" style="display:none;"></div>
+      <div class="result" id="result" aria-live="polite"><span></span></div>
+    </form>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+// Theme toggle
+$('#themeToggle').on('click', function() {
+  const body = $('body');
+  const icon = $('#themeIcon');
+  if (body.hasClass('theme-light')) {
+    body.removeClass('theme-light').addClass('theme-dark');
+    icon.text('light_mode');
+  } else {
+    body.removeClass('theme-dark').addClass('theme-light');
+    icon.text('dark_mode');
+  }
+});
+// File input label update and drag-drop
+const dropArea = $('#dropArea');
+const fileInput = $('#imageUpload');
+const fileLabelText = $('#fileLabelText');
+function showFile(file) {
+  fileLabelText.text(file.name);
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    $('#imagePreview').attr('src', e.target.result);
+    $('#imagePreviewSection').show();
+  }
+  reader.readAsDataURL(file);
+  $('#btn-predict').prop('disabled', false).attr('aria-disabled', 'false');
+}
+fileInput.on('change', function() {
+  if (this.files[0]) showFile(this.files[0]);
+  else {
+    fileLabelText.text('Drag & drop or click to select an image...');
+    $('#imagePreviewSection').hide();
+    $('#btn-predict').prop('disabled', true).attr('aria-disabled', 'true');
+  }
+});
+dropArea.on('dragover', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  dropArea.addClass('dragover');
+});
+dropArea.on('dragleave drop', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  dropArea.removeClass('dragover');
+});
+dropArea.on('drop', function(e) {
+  const files = e.originalEvent.dataTransfer.files;
+  if (files && files[0]) {
+    fileInput[0].files = files;
+    showFile(files[0]);
+  }
+});
+dropArea.on('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ' ') fileInput.click();
+});
+// Predict button click
+$('#btn-predict').on('click', function() {
+  var form_data = new FormData($('#upload-form')[0]);
+  $('#loader').show();
+  $('#result span').text('');
+  $.ajax({
+    type: 'POST',
+    url: '/predict',
+    data: form_data,
+    contentType: false,
+    cache: false,
+    processData: false,
+    success: function(data) {
+      $('#loader').hide();
+      let text = data;
+      let isTumor = /detected$/i.test(data) && !/not/i.test(data);
+      $('#result span').text(text).removeClass('result-green result-red')
+        .addClass(isTumor ? 'result-red' : 'result-green');
+    },
+    error: function() {
+      $('#loader').hide();
+      $('#result span').text('An error occurred.').removeClass('result-green result-red');
+    }
+  });
+});
+// Ripple effect for button
+$('.ripple').on('mousedown keydown', function(e) {
+  if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+  const btn = $(this);
+  btn.find('.ripple-anim').remove();
+  const ripple = $('<span class="ripple-anim"></span>');
+  btn.append(ripple);
+  const x = e.offsetX || btn.width()/2;
+  const y = e.offsetY || btn.height()/2;
+  ripple.css({left: x, top: y});
+  setTimeout(() => ripple.remove(), 600);
+});
+</script>
+{% endblock %}

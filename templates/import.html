@@ -1,0 +1,37 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Brain Tumor Detection</title>
+    <!-- Google Fonts: Roboto & Material Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Modern main CSS for new design -->
+    <link href="{{ url_for('static', filename='css/main-modern.css') }}" rel="stylesheet">
+    <!-- Optionally keep Bootstrap for grid/utilities, but remove test.css and unnecessary JS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+
+<body class="theme-light">
+    <nav class="navbar navbar-modern">
+        <div class="container nav-flex">
+            <span class="navbar-title left-align">Brain Tumor Detection</span>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="material-icons" id="themeIcon">dark_mode</span>
+            </button>
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+
+
+</html>
+
+
+
+
