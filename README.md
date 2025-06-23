@@ -10,8 +10,10 @@ The app features a modern, responsive Material UI-inspired frontend and a simple
 - Powered by a pre-trained Keras/TensorFlow model.
 
 ## Demo
+![Screenshot (201)](https://github.com/user-attachments/assets/00fa3cd1-59f9-4031-9e90-9671752a2140)
+![Screenshot (200)](https://github.com/user-attachments/assets/2e09d658-f374-49e4-96f6-3b9beedfc5d6)
 
-![App Screenshot](screenshot.png) <!-- Add a screenshot if you have one -->
+
 
 ## Getting Started
 
