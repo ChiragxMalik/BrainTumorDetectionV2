@@ -69,7 +69,3 @@ Visit [http://127.0.0.1:5000](http://127.0.0.1:5000) in your browser.
 This project was originally created as a classic deep learning web app.  
 Recently, I used AI prompts (with GPT-4) to make my old project more efficient and to give it a much better, modern frontend.  
 It's amazing how just a couple of prompts can transform and modernize a project!
-
-## License
-
-[MIT](LICENSE) 
